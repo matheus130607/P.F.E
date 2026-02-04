@@ -21,9 +21,13 @@
             document.getElementById("resultado").innerText =
               `Temperatura em  fahrenheit: ${F.toFixed(2)} °F`;
 
-            if (F > 80) {
+            if (F > 81) {
                
             document.body.style.backgroundColor = 'orange';   
+
+        } else if(F == 80.60){
+
+            document.body.style.background = "linear-gradient(to right, orange, lightskyblue)";
 
         } else {
             document.body.style.backgroundColor = 'lightskyblue'
