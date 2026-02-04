@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Revisão 01</title>
+</head>
+<body>
+    <div class="container">
+    <h1>Revisão 1</h1>
+
+    <input type="number" id="C" placeholder="Digite a temperatura em °C">
+    <button onclick="converter()">Converter</button>
+    <p id="resultado"></p>
+</div>
+    <script>
+        function converter() {
+            const C = Number(document.getElementById("C").value);
+
+            const F = (C * 1.8) + 32;
+
+            document.getElementById("resultado").innerText =
+              `Temperatura em  fahrenheit: ${F.toFixed(2)} °F`;
+
+            if (F > 80) {
+               
+            document.body.style.backgroundColor = 'orange';   
+
+        } else {
+            document.body.style.backgroundColor = 'lightskyblue'
+        }
+    }
+    </script>
+
+    <style>
+        
+       body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #f5f5f5;
+}
+
+.container {
+    width: 500px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: #ffffff41;
+    text-align: center;
+    border-radius: 30px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    background-color: #ffffff41;
+}
+
+button {
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: #ffffff41;
+}
+
+p {
+    margin-top: 10px;
+}
+
+
+    </style>
+</body>
+</html>

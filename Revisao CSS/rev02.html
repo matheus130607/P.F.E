@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revisão 2</title>
+</head>
+<body>
+
+    <div class="container">
+
+        
+
+        <div class="dev">
+            <h2>Insira valores</h2>
+
+            <p>Nome:</p>
+            <input type="text" id="nome" placeholder="Digite seu nome">
+
+            <p>Cargo:</p>
+            <input type="text" id="cargo" placeholder="Digite seu cargo">
+
+            <p>Cor do cartão:</p>
+            <select id="background-selector">
+                <option value="">Selecione...</option>
+                <option value="white">Branco</option>
+                <option value="orange">Laranja</option>
+                <option value="lightskyblue">Azul</option>
+                <option value="green">Verde</option>
+                <option value="yellow">Amarelo</option>
+            </select>
+        </div>
+
+        <div class="cartao" id="cartao">
+            <h2>Cartão de visitas</h2>
+            <p id="innome"></p>
+            <p id="incargo"></p>
+        </div>
+
+    </div>
+
+    <script>
+        const nome = document.getElementById('nome');
+        const cargo = document.getElementById('cargo');
+        const select = document.getElementById('background-selector');
+
+        const innome = document.getElementById('innome');
+        const incargo = document.getElementById('incargo');
+        const cartao = document.getElementById('cartao');
+
+        nome.oninput = function () {
+            innome.innerText = this.value;
+        };
+
+        cargo.oninput = function () {
+            incargo.innerText = this.value;
+        };
+
+        select.addEventListener('change', function () {
+            cartao.style.backgroundColor = this.value;
+        });
+    </script>
+
+    <style>
+        
+        body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: #f2f2f2;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 50px;
+}
+
+.dev, .cartao {
+    text-align: center;
+    width: 300px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 30px;
+}
+
+.dev p {
+    margin-bottom: 5px;
+}
+
+.dev input,
+.dev select {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 15px;
+}
+
+.cartao {
+    text-align: center;
+    min-height: 150px;
+}
+
+    </style>
+
+</body>
+</html>
