@@ -1,0 +1,35 @@
+@media screen and (min-width: 1001px) {
+    img {
+        height: 180px;
+        width: 220px;
+
+    }
+    body {
+        background-color: aqua;
+    }
+}
+
+@media screen and (max-width: 1000px) and (min-width:601px) {
+    
+    img{
+        height: 140px;
+        width: 180px;
+    }
+
+    body {
+        background-color: purple;
+    }
+}
+
+@media screen and (max-width: 600px) {
+
+    img {
+        height: 110px;
+        width: 130;
+    }
+
+    body {
+        background-color: black;
+    }
+}
+

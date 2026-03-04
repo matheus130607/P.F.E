@@ -1,0 +1,117 @@
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+/* Container principal da Sidebar */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px; /* Espaço uniforme entre os ícones */
+    width: 80px;
+    padding: 35px 0;
+    border-right: 1px solid #dbdbdb;
+    height: 100vh;
+    box-sizing: border-box;
+    background-color: #fff;
+    position: fixed; 
+    left: 0;
+    top: 0;
+}
+
+/* Estilo geral dos links */
+.icon-link {
+    position: relative;
+    text-decoration: none;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease;
+}
+
+.icon-link:hover {
+    transform: scale(1.05); 
+}
+
+/* Estilizar os SVGs gerados pelo Lucide */
+.icon-link svg {
+    width: 28px;
+    height: 28px;
+    stroke: #000;
+    stroke-width: 2; 
+    fill: none;
+}
+
+/* Estilo da foto de perfil redonda */
+.profile-pic img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Empurra os últimos ícones para a base do ecrã */
+.menu-bottom {
+    margin-top: auto; 
+}
+
+.menu-top {
+    margin-bottom: auto;
+}
+
+
+
+
+
+/* Container principal da Navbar */
+.navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start; 
+    gap: 15px;
+    width: 100%;
+    max-width: 600px; 
+    height: 120px;
+    box-sizing: border-box;
+    background-color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 15px;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+.icon-story {
+    display: flex;
+    color: #000;
+    flex-direction: column;   
+    align-items: center;
+    flex-shrink: 0; 
+    width: 85px;
+    text-decoration: none;
+}
+
+.icon-story img {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    object-fit: cover;
+    padding: 3px;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+}
+
+.icon-story span {
+    font-size: 12px;
+    margin-top: 8px;
+    max-width: 75px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.icon-story:hover {
+    transform: scale(1.05);
+}
