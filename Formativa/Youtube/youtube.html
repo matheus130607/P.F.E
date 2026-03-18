@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube</title>
+    <!-- Fonte Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --text-primary: #f1f1f1;
+            --text-secondary: #aaaaaa;
+            --hover-bg: #272727;
+            --border-color: #3f3f3f;
+            --search-bg: #121212;
+            --modal-bg: #212121;
+            --blue-link: #3ea6ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            overflow-y: hidden;
+        }
+
+        /* --- CABEÇALHO --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            height: 56px;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--bg-color);
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .menu-btn:hover { background-color: var(--hover-bg); }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            cursor: pointer;
+        }
+        
+        .yt-brand-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .logo sup { font-size: 10px; font-weight: 400; color: var(--text-secondary); margin-top: -10px; }
+
+        .header-center {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            max-width: 720px;
+            margin: 0 40px;
+        }
+
+        .search-box {
+            display: flex;
+            flex-grow: 1;
+            align-items: center;
+            background-color: var(--search-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 40px 0 0 40px;
+            padding: 0 16px;
+            height: 40px;
+            margin-left: 40px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            width: 100%;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-btn {
+            background-color: var(--hover-bg);
+            border: 1px solid var(--border-color);
+            border-left: none;
+            border-radius: 0 40px 40px 0;
+            height: 40px;
+            width: 64px;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+
+        .mic-btn {
+            background-color: var(--hover-bg);
+            border: none;
+            border-radius: 50%;
+            height: 40px;
+            width: 40px;
+            margin-left: 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mic-btn:hover { background-color: #3f3f3f; }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .create-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+            border: none;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #1a73e8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* --- LAYOUT PRINCIPAL --- */
+        .main-layout {
+            display: flex;
+            margin-top: 56px;
+            height: calc(100vh - 56px);
+        }
+
+        /* --- BARRA LATERAL (SIDEBAR) --- */
+        .sidebar {
+            width: 240px;
+            background-color: var(--bg-color);
+            overflow-y: auto;
+            padding: 12px 12px 12px 0;
+            transition: width 0.2s;
+        }
+
+        .sidebar.collapsed { width: 72px; }
+        .sidebar.collapsed .sidebar-text,
+        .sidebar.collapsed .divider,
+        .sidebar.collapsed .section-title { display: none; }
+        
+        .sidebar.collapsed .nav-item { flex-direction: column; padding: 16px 0; border-radius: 10px; margin: 0 4px; }
+        
+        /* Ajuste de margens quando colapsado para os diferentes tipos de ícones */
+        .sidebar.collapsed .nav-item .lucide,
+        .sidebar.collapsed .yt-sidebar-icon,
+        .sidebar.collapsed .yt-sidebar-svg,
+        .sidebar.collapsed .yt-kids-wrapper { margin-right: 0; margin-bottom: 6px; }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            margin-left: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .nav-item.active { background-color: var(--hover-bg); font-weight: 500; }
+        .nav-item:hover { background-color: var(--hover-bg); }
+        .nav-item .lucide { margin-right: 20px; width: 22px; height: 22px; stroke-width: 1.5px; }
+        
+        /* Ícones customizados na sidebar */
+        .yt-sidebar-icon {
+            width: 22px;
+            height: 22px;
+            margin-right: 20px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .yt-sidebar-svg {
+            width: 22px;
+            height: 22px;
+            margin-right: 20px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        /* Wrapper especial para esconder o texto do SVG do YT Kids */
+        .yt-kids-wrapper {
+            width: 24px;
+            height: 24px;
+            overflow: hidden;
+            position: relative;
+            margin-right: 18px; /* Mantém o alinhamento correto */
+            flex-shrink: 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .yt-kids-wrapper img {
+            height: 120%; /* Aumenta um pouco para a carinha ficar nítida */
+            position: absolute;
+            left: -2px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 12px 0;
+        }
+
+        .section-title {
+            padding: 8px 12px 8px 24px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* --- RODAPÉ DA BARRA LATERAL --- */
+        .sidebar-footer {
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2px 8px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .sidebar-footer .copyright {
+            color: #717171;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .sidebar.collapsed .sidebar-footer {
+            display: none;
+        }
+
+        /* --- ÁREA PRINCIPAL --- */
+        .content-area {
+            flex-grow: 1;
+            background-color: var(--bg-color);
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- CARROSSEL DE CATEGORIAS --- */
+        .categories-wrapper {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-color);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            overflow: hidden;
+        }
+
+        .categories {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            white-space: nowrap;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-right: 24px;
+            cursor: grab;
+        }
+
+        .categories:active { cursor: grabbing; }
+        .categories::-webkit-scrollbar { display: none; }
+
+        .chip {
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+        }
+
+        .chip.active { background-color: var(--text-primary); color: var(--bg-color); }
+        .chip:hover:not(.active) { background-color: #3f3f3f; }
+
+        .carousel-btn {
+            position: absolute;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 2;
+            transition: opacity 0.2s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .carousel-btn:hover { background-color: var(--hover-bg); }
+        
+        .fade-left, .fade-right {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 80px;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .fade-left { left: 0; background: linear-gradient(to right, var(--bg-color) 30%, transparent); }
+        .fade-right { right: 0; background: linear-gradient(to left, var(--bg-color) 30%, transparent); }
+
+        .carousel-btn.left { left: 16px; }
+        .carousel-btn.right { right: 16px; }
+
+        .show-left .carousel-btn.left, .show-left .fade-left { opacity: 1; pointer-events: auto; }
+        .show-right .carousel-btn.right, .show-right .fade-right { opacity: 1; pointer-events: auto; }
+
+        /* --- GRELHA DE VÍDEOS --- */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px 16px;
+            padding: 24px;
+        }
+
+        .video-card { display: flex; flex-direction: column; gap: 12px; cursor: pointer; }
+        
+        .thumbnail-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #222;
+        }
+
+        .thumbnail-container img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 3px 4px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .video-info { display: flex; gap: 12px; }
+        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; background-color: #444; }
+        
+        .video-details { display: flex; flex-direction: column; flex-grow: 1; }
+        .video-title { font-size: 16px; font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 4px; }
+        
+        .channel-name, .video-stats { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
+        .channel-name { display: flex; align-items: center; gap: 4px; }
+
+        /* Anúncio */
+        .ad-actions { display: flex; gap: 8px; margin-top: 12px; }
+        .btn-ad-assistir, .btn-ad-site { padding: 8px 16px; border-radius: 18px; font-size: 14px; font-weight: 500; border: none; cursor: pointer; flex: 1; }
+        .btn-ad-assistir { background-color: var(--hover-bg); color: var(--text-primary); }
+        .btn-ad-site { background-color: var(--text-primary); color: var(--bg-color); }
+        .sponsor-tag { font-size: 12px; font-weight: 700; color: var(--text-primary); margin-top: 4px;}
+
+        /* --- SHORTS --- */
+        .shorts-section { padding: 24px; }
+        .shorts-header { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; font-size: 20px; font-weight: 700; }
+        
+        .shorts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+        .short-card { display: flex; flex-direction: column; gap: 8px; cursor: pointer; }
+        .short-thumbnail { width: 100%; aspect-ratio: 9/16; border-radius: 12px; background-color: #222; object-fit: cover; }
+        .short-title { font-size: 16px; font-weight: 500; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+        /* Custom Scrollbar Global */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: #717171; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a0a0a0; }
+
+        /* --- MODAL DE VOZ --- */
+        .voice-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 80px;
+        }
+
+        .voice-modal-content {
+            background-color: var(--modal-bg);
+            width: 600px;
+            height: 400px;
+            max-width: 90%;
+            border-radius: 4px;
+            padding: 32px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .voice-modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .voice-modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .voice-modal-title {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 24px;
+            margin-top: 8px;
+            transition: opacity 0.2s ease;
+        }
+
+        .voice-modal-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            max-width: 90%;
+            transition: opacity 0.2s ease;
+        }
+
+        .voice-modal-mic-container {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 32px;
+        }
+
+        .voice-modal-big-mic {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background-color: #3f3f3f;
+            border: none;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .voice-modal-big-mic:hover {
+            background-color: #4f4f4f;
+        }
+
+        .voice-modal-big-mic .lucide {
+            width: 32px;
+            height: 32px;
+        }
+
+        /* --- ESTADOS DO MODAL (OUVINDO) --- */
+        .voice-modal-content.listening .voice-modal-text {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .voice-modal-content.listening .voice-modal-big-mic {
+            background-color: #ff0000;
+        }
+
+        .voice-modal-content.listening .voice-modal-big-mic:hover {
+            background-color: #cc0000;
+        }
+
+        /* --- EFEITO DE ONDA SONORA --- */
+        .sound-wave-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+            border-radius: 0 0 4px 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 60%);
+            mask-image: linear-gradient(to bottom, transparent 0%, black 60%);
+        }
+
+        .voice-modal-content.listening .sound-wave-container {
+            opacity: 1;
+        }
+
+        .sound-wave-track {
+            display: flex;
+            align-items: flex-end;
+            width: 250%;
+            height: 100%;
+            gap: 4px;
+            padding: 0 10px;
+            animation: pan-track 8s infinite alternate ease-in-out;
+        }
+
+        .sound-bar {
+            flex: 1;
+            height: 100%;
+            border-radius: 10px 10px 0 0;
+            transform-origin: bottom;
+            animation: equalize 1s infinite alternate ease-in-out;
+            transform: scaleY(0.1);
+        }
+
+        @keyframes pan-track {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-40%); }
+        }
+
+        @keyframes equalize {
+            0% { transform: scaleY(0.1); }
+            100% { transform: scaleY(var(--max-scale, 1)); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Cabeçalho -->
+    <header>
+        <div class="header-left">
+            <button class="menu-btn" onclick="toggleSidebar()"><i data-lucide="menu"></i></button>
+            <div class="logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube" class="yt-brand-icon">
+                YouTube <sup>BR</sup>
+            </div>
+        </div>
+
+        <div class="header-center">
+            <div class="search-box">
+                <input type="text" placeholder="Pesquisar" />
+                <i data-lucide="keyboard" style="color: #aaa; width: 20px; height: 20px;"></i>
+            </div>
+            <button class="search-btn"><i data-lucide="search"></i></button>
+            <button class="mic-btn" id="open-voice-modal"><i data-lucide="mic"></i></button>
+        </div>
+
+        <div class="header-right">
+            <button class="create-btn"><i data-lucide="plus"></i> Criar</button>
+            <button class="icon-btn"><i data-lucide="bell"></i></button>
+            <div class="avatar">M</div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        
+        <!-- Barra Lateral -->
+        <aside class="sidebar" id="sidebar">
+            <a href="#" class="nav-item active">
+                <i data-lucide="home"></i>
+                <span class="sidebar-text">Início</span>
+            </a>
+            <a href="#" class="nav-item">
+                <!-- SVG Oficial do Shorts em Contorno (Outline) -->
+                <svg viewBox="0 0 24 24" class="yt-sidebar-svg">
+                    <g>
+                        <path d="M10,14.65v-5.3L15,12L10,14.65z M17.77,10.33l-1.2-0.5L18,9.06c1.84-0.96,2.53-3.23,1.56-5.06s-3.24-2.53-5.07-1.56L6,6.94 C4.71,7.62,3.94,8.98,4,10.43c0.06,1.42,0.94,2.66,2.23,3.1l1.2,0.5L6,14.94c-1.85,0.96-2.54,3.23-1.57,5.06 s3.24,2.53,5.07,1.56l8.5-4.5c1.29-0.68,2.06-2.04,1.99-3.49C19.93,12.15,19.06,10.91,17.77,10.33z M17.01,14.59l-8.5,4.5 c-1.34,0.71-3.01,0.2-3.72-1.14c-0.71-1.34-0.2-3.01,1.14-3.72l2.04-1.08v-1.21l-2.04-1.08c-1.34-0.71-1.85-2.38-1.14-3.72 c0.71-1.34,2.38-1.85,3.72-1.14l8.5-4.5c1.34-0.71,3.01-0.2,3.72,1.14c0.71,1.34,0.2,3.01-1.14,3.72l-2.04,1.08v1.21l2.04,1.08 C18.35,13.88,18.86,15.55,17.01,14.59z"></path>
+                    </g>
+                </svg>
+                <span class="sidebar-text">Shorts</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="monitor-play"></i>
+                <span class="sidebar-text">Inscrições</span>
+            </a>
+
+            <div class="divider"></div>
+
+            <div class="section-title">Você ></div>
+            <a href="#" class="nav-item">
+                <i data-lucide="history"></i>
+                <span class="sidebar-text">Histórico</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="list-video"></i>
+                <span class="sidebar-text">Playlists</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="clock"></i>
+                <span class="sidebar-text">Assistir mais tarde</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="thumbs-up"></i>
+                <span class="sidebar-text">Vídeos com "Gostei"</span>
+            </a>
+
+            <div class="divider"></div>
+
+            <div class="section-title">Explorar</div>
+            <a href="#" class="nav-item">
+                <i data-lucide="shopping-bag"></i>
+                <span class="sidebar-text">Shopping</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="music"></i>
+                <span class="sidebar-text">Música</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i data-lucide="film"></i>
+                <span class="sidebar-text">Filmes</span>
+            </a>
+            
+            <div id="explorar-expanded" style="display: none;">
+                <a href="#" class="nav-item">
+                    <i data-lucide="radio"></i>
+                    <span class="sidebar-text">Ao vivo</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="gamepad-2"></i>
+                    <span class="sidebar-text">Jogos</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="newspaper"></i>
+                    <span class="sidebar-text">Notícias</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="trophy"></i>
+                    <span class="sidebar-text">Esportes</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="lightbulb"></i>
+                    <span class="sidebar-text">Cursos</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i data-lucide="podcast"></i>
+                    <span class="sidebar-text">Podcasts</span>
+                </a>
+            </div>
+
+            <a href="#" class="nav-item" id="btn-explorar-toggle" onclick="toggleExplorar(event)">
+                <span id="explorar-icon-down" style="display: flex; align-items: center;"><i data-lucide="chevron-down"></i></span>
+                <span id="explorar-icon-up" style="display: none; align-items: center;"><i data-lucide="chevron-up"></i></span>
+                <span class="sidebar-text" id="explorar-toggle-text">Mostrar mais</span>
+            </a>
+
+            <div class="divider"></div>
+
+            <div class="section-title">Mais do YouTube</div>
+            <a href="#" class="nav-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube Premium" class="yt-sidebar-icon">
+                <span class="sidebar-text">YouTube Premium</span>
+            </a>
+            <a href="#" class="nav-item">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Youtube_Music_icon.svg" alt="YouTube Music" class="yt-sidebar-icon">
+                <span class="sidebar-text">YouTube Music</span>
+            </a>
+            <a href="#" class="nav-item">
+                <!-- Máscara infalível para mostrar apenas o ícone do YouTube Kids usando SVG Oficial da Wikimedia -->
+                <div class="yt-kids-wrapper">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fb/YouTube_Kids_Logo_2017.svg" alt="YouTube Kids">
+                </div>
+                <span class="sidebar-text">YouTube Kids</span>
+            </a>
+
+            <div class="divider"></div>
+
+            <a href="#" class="nav-item">
+                <i data-lucide="flag"></i>
+                <span class="sidebar-text">Histórico de denún...</span>
+            </a>
+
+            <div class="sidebar-footer">
+                <div class="footer-links">
+                    <a href="#">Sobre</a>
+                    <a href="#">Imprensa</a>
+                    <a href="#">Direitos autorais</a>
+                    <a href="#">Entre em contato</a>
+                    <a href="#">Criadores de conteúdo</a>
+                    <a href="#">Publicidade</a>
+                    <a href="#">Desenvolvedores</a>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Termos</a>
+                    <a href="#">Privacidade</a>
+                    <a href="#">Política e segurança</a>
+                    <a href="#">Como funciona o YouTube</a>
+                    <a href="#">Testar os novos recursos</a>
+                </div>
+                <div class="copyright">© 2026 Google LLC</div>
+            </div>
+        </aside>
+
+        <!-- Área Principal -->
+        <main class="content-area">
+            
+            <!-- Carrossel de Categorias -->
+            <div class="categories-wrapper" id="carousel-wrapper">
+                <div class="fade-left"></div>
+                <button class="carousel-btn left" id="btn-left" onclick="scrollCarousel(-200)">
+                    <i data-lucide="chevron-left"></i>
+                </button>
+                
+                <div class="categories" id="categories-list">
+                    <button class="chip active">Tudo</button>
+                    <button class="chip">Música</button>
+                    <button class="chip">Bruno Mars</button>
+                    <button class="chip">Funk carioca</button>
+                    <button class="chip">Jogos</button>
+                    <button class="chip">Lista de reprodução</button>
+                    <button class="chip">Hip hop brasileiro</button>
+                    <button class="chip">Henrique & Juliano</button>
+                    <button class="chip">Dance-Pop</button>
+                    <button class="chip">Homem-Aranha - jogo</button>
+                    <button class="chip">Notícias</button>
+                    <button class="chip">Pop rock</button>
+                    <button class="chip">Samba</button>
+                    <button class="chip">Rap</button>
+                    <button class="chip">Jogo de ação</button>
+                    <button class="chip">Futebol</button>
+                    <button class="chip">Ao vivo</button>
+                </div>
+
+                <button class="carousel-btn right" id="btn-right" onclick="scrollCarousel(200)">
+                    <i data-lucide="chevron-right"></i>
+                </button>
+                <div class="fade-right"></div>
+            </div>
+
+            <!-- Grelha de Vídeos -->
+            <div class="video-grid">
+                <!-- Anúncio -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <img src="https://picsum.photos/id/180/400/225" alt="Miniatura">
+                    </div>
+                    <div class="video-info">
+                        <img src="https://picsum.photos/id/20/40/40" class="channel-avatar">
+                        <div class="video-details">
+                            <h3 class="video-title">O trabalho está quebrado. Nós consertamos. Um app para os teus projetos, dados e conversas.</h3>
+                            <span class="sponsor-tag">Patrocinado • ClickUp</span>
+                            <div class="ad-actions">
+                                <button class="btn-ad-assistir">Assistir</button>
+                                <button class="btn-ad-site">Acessar o site</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo Normal -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <img src="https://picsum.photos/id/452/400/225" alt="Miniatura">
+                        <span class="duration">2:05:38</span>
+                    </div>
+                    <div class="video-info">
+                        <img src="https://picsum.photos/id/64/40/40" class="channel-avatar">
+                        <div class="video-details">
+                            <h3 class="video-title">Rihanna, Adele, Bruno Mars, Maroon 5, Zayn, Dua Lipa, Ed Sheeran 🌊 Billboard Hot 100</h3>
+                            <span class="channel-name">Top Hits Music</span>
+                            <span class="video-stats">327 mil visualizações • há 1 mês</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vídeo Normal -->
+                <div class="video-card">
+                    <div class="thumbnail-container">
+                        <img src="https://picsum.photos/id/287/400/225" alt="Miniatura">
+                        <span class="duration">2:02:07</span>
+                    </div>
+                    <div class="video-info">
+                        <img src="https://picsum.photos/id/338/40/40" class="channel-avatar">
+                        <div class="video-details">
+                            <h3 class="video-title">~ Relaxing Nordic Music - Medieval Female Vocals - Ritualistic Celtic Music ~</h3>
+                            <span class="channel-name">Pulse of Gaia</span>
+                            <span class="video-stats">276 mil visualizações • há 1 mês</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secção Shorts -->
+            <div class="shorts-section">
+                <div class="shorts-header">
+                    <!-- Aqui mantemos o vermelho para destacar o título da secção -->
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/f/fc/Youtube_shorts_icon.svg" alt="Shorts" style="width: 24px; height: 24px;"> Shorts
+                </div>
+                <div class="shorts-grid">
+                    <div class="short-card">
+                        <img src="https://picsum.photos/id/43/200/350" class="short-thumbnail">
+                        <span class="short-title">Fazendo bolo de pistache #receitas</span>
+                    </div>
+                    <div class="short-card">
+                        <img src="https://picsum.photos/id/237/200/350" class="short-thumbnail">
+                        <span class="short-title">Ranking Best Seal Moments</span>
+                    </div>
+                    <div class="short-card">
+                        <img src="https://picsum.photos/id/331/200/350" class="short-thumbnail">
+                        <span class="short-title">Testando o novo modelador!</span>
+                    </div>
+                    <div class="short-card">
+                        <img src="https://picsum.photos/id/160/200/350" class="short-thumbnail">
+                        <span class="short-title">Comprei a capinha do Mario Bros</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Modal de Pesquisa por Voz -->
+    <div class="voice-modal-overlay" id="voice-modal">
+        <div class="voice-modal-content">
+            <button class="voice-modal-close" id="close-voice-modal">
+                <i data-lucide="x"></i>
+            </button>
+            <h2 class="voice-modal-title">Pesquisar com sua voz</h2>
+            <p class="voice-modal-text">Para pesquisar por voz, acesse as configurações do seu navegador e permita o acesso ao microfone</p>
+            
+            <div class="voice-modal-mic-container" style="position: relative; z-index: 10;">
+                <button class="voice-modal-big-mic">
+                    <i data-lucide="mic"></i>
+                </button>
+            </div>
+
+            <div class="sound-wave-container">
+                <div class="sound-wave-track" id="sound-wave-track"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Oficial do Lucide para renderizar os SVGs restantes -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Inicializa todos os icones Lucide na página
+        lucide.createIcons();
+
+        /* --- Lógica da Barra Lateral --- */
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        /* --- Lógica do Carrossel --- */
+        const carousel = document.getElementById('categories-list');
+        const wrapper = document.getElementById('carousel-wrapper');
+
+        function scrollCarousel(offset) {
+            carousel.scrollBy({ left: offset, behavior: 'smooth' });
+        }
+
+        function updateCarouselButtons() {
+            const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+            
+            if (carousel.scrollLeft > 0) {
+                wrapper.classList.add('show-left');
+            } else {
+                wrapper.classList.remove('show-left');
+            }
+
+            if (Math.ceil(carousel.scrollLeft) >= maxScrollLeft - 1) {
+                wrapper.classList.remove('show-right');
+            } else {
+                wrapper.classList.add('show-right');
+            }
+        }
+
+        carousel.addEventListener('scroll', updateCarouselButtons);
+        window.addEventListener('resize', updateCarouselButtons);
+
+        /* Drag-to-scroll do Carrossel */
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        carousel.addEventListener('mousedown', (e) => {
+            isDown = true;
+            carousel.style.scrollBehavior = 'auto';
+            startX = e.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+        });
+
+        carousel.addEventListener('mouseleave', () => {
+            isDown = false;
+            carousel.style.scrollBehavior = 'smooth';
+        });
+
+        carousel.addEventListener('mouseup', () => {
+            isDown = false;
+            carousel.style.scrollBehavior = 'smooth';
+        });
+
+        carousel.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 2;
+            carousel.scrollLeft = scrollLeft - walk;
+        });
+
+        window.onload = updateCarouselButtons;
+
+        /* --- Lógica do Modal de Voz --- */
+        const voiceModal = document.getElementById('voice-modal');
+        const openBtn = document.getElementById('open-voice-modal');
+        const closeBtn = document.getElementById('close-voice-modal');
+        
+        const modalContent = document.querySelector('.voice-modal-content');
+        const voiceTitle = document.querySelector('.voice-modal-title');
+        const voiceText = document.querySelector('.voice-modal-text');
+        const bigMicBtn = document.querySelector('.voice-modal-big-mic');
+
+        function resetVoiceModal() {
+            modalContent.classList.remove('listening');
+            voiceTitle.style.opacity = '1';
+            voiceTitle.innerText = "Pesquisar com sua voz";
+            voiceText.style.display = 'block'; 
+        }
+
+        openBtn.addEventListener('click', () => {
+            voiceModal.style.display = 'flex';
+        });
+
+        bigMicBtn.addEventListener('click', () => {
+            if (!modalContent.classList.contains('listening')) {
+                modalContent.classList.add('listening');
+                voiceTitle.style.opacity = '0';
+                setTimeout(() => {
+                    voiceTitle.innerText = "Ouvindo...";
+                    voiceTitle.style.opacity = '1';
+                    voiceText.style.display = 'none'; 
+                }, 200);
+            }
+        });
+
+        closeBtn.addEventListener('click', () => {
+            voiceModal.style.display = 'none';
+            setTimeout(resetVoiceModal, 300); 
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === voiceModal) {
+                voiceModal.style.display = 'none';
+                setTimeout(resetVoiceModal, 300);
+            }
+        });
+
+        /* --- Gerar as Barras do Equalizador Colorido --- */
+        const track = document.getElementById('sound-wave-track');
+        const numBars = 80;
+
+        for (let i = 0; i < numBars; i++) {
+            const bar = document.createElement('div');
+            bar.classList.add('sound-bar');
+            const hue = (180 + (i / numBars) * 300) % 360;
+            bar.style.backgroundColor = `hsl(${hue}, 80%, 60%)`;
+            const peak = Math.abs(Math.sin(i * 0.15)) * 0.6 + 0.4;
+            const randomVariance = 0.5 + Math.random() * 0.5;
+            bar.style.setProperty('--max-scale', peak * randomVariance);
+            bar.style.animationDelay = `${Math.random() * -2}s`;
+            bar.style.animationDuration = `${0.6 + Math.random() * 0.5}s`;
+            track.appendChild(bar);
+        }
+
+        /* --- Lógica de Expandir/Recolher "Explorar" --- */
+        function toggleExplorar(e) {
+            e.preventDefault(); 
+            const expandedDiv = document.getElementById('explorar-expanded');
+            const iconDown = document.getElementById('explorar-icon-down');
+            const iconUp = document.getElementById('explorar-icon-up');
+            const text = document.getElementById('explorar-toggle-text');
+
+            if (expandedDiv.style.display === 'none') {
+                expandedDiv.style.display = 'block';
+                iconDown.style.display = 'none';
+                iconUp.style.display = 'flex'; 
+                text.innerText = 'Mostrar menos';
+            } else {
+                expandedDiv.style.display = 'none';
+                iconDown.style.display = 'flex'; 
+                iconUp.style.display = 'none';
+                text.innerText = 'Mostrar mais';
+            }
+        }
+    </script>
+</body>
+</html>
