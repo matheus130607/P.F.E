@@ -130,6 +130,7 @@ function App() {
       // Verifica se o texto da tarefa contém o termo de busca (convertido para minúsculas)
       t.text.toLowerCase().includes(searchTerm.toLowerCase())
     )
+
     // Ordena as tarefas por prioridade (Alta primeiro)
     .sort((a, b) => {
       // Objeto que converte prioridades em números para comparação: Alta=3, Média=2, Baixa=1
